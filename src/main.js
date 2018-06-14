@@ -3,13 +3,21 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
+import store from '@/store'
+import vSelect from 'vue-select'
 
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+Vue.use(BootstrapVue)
+Vue.component('v-select', vSelect)
 Vue.config.productionTip = false
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
