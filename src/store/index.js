@@ -12,9 +12,12 @@ const Store = new Vuex.Store({
       required: true
     },
     addItem: {},
+    arrayCategories: [],
     user: {},
     isAuth: false,
-    withCredentials: true
+    withCredentials: true,
+    pageNumber: 0,
+    size: 10
   },
   mutations: {
     updateAddsList (state, data) {
@@ -22,6 +25,11 @@ const Store = new Vuex.Store({
     },
     updateAddItem (state, data) {
       state.addItem = data
+    },
+    updateCategories (state, data) {
+      data.forEach(element => {
+        state.arrayCategories.push(element.name)
+      })
     },
     updateAuth (state, data) {
       state.isAuth = data
@@ -33,6 +41,9 @@ const Store = new Vuex.Store({
   actions: {
     setList (context, params) {
       context.commit('updateAddsList', params.data)
+    },
+    setCategoriesList (context, params) {
+      context.commit('updateCategories', params.data)
     },
     loadById (context, params) {
       context.state.addsList.forEach(item => {

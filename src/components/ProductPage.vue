@@ -9,18 +9,18 @@
             </div>
             <div class="card-body">
                 <div class="form" role="form">
-                    <img class="good_photo" src="https://vodopad.ru/info/images/box.png" alt="Image">
+                    <img class="good_photo" :src="item.image" alt="Image">
                      <div class="form-group">
                         <label>Title</label>
-                        <div>Title</div>
+                        <div>{{item.name}}</div>
                     </div>
                     <div class="form-group">
                         <label>Description</label>
-                        <div>Description</div>
+                        <div>{{item.description}}</div>
                     </div>
                     <div class="form-group">
                         <label for="">Price</label>
-                        <div>100</div>
+                        <div>{{item.price}}</div>
                     </div>
                 </div>
             </div>
@@ -32,11 +32,25 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'ProductPage',
-  data () {
-    return {
-    }
+  computed: {
+    ...mapState({
+      item: 'addItem',
+      user: 'user'
+    })
+  },
+  created () {
+    this.$store.dispatch('loadById', {id: this.$route.params.id})
   }
 }
 </script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.good_photo {
+  height: 220px;
+  width: 300px;
+}
+</style>

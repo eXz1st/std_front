@@ -1,18 +1,21 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="nav-link" href="">Market</a>
+      <router-link class="nav-link" :to="{name: 'Index'}">Market</router-link>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="">Login</a>
+          <li class="nav-item" v-if="!this.$store.state.isAuth">
+            <router-link class="nav-link" :to="{name: 'Login'}">Login</router-link>
+          </li>
+          <li class="nav-item" v-else>
+            <a id="logout" class="nav-link" @click="logout">Logout</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="">Register</a>
+            <router-link class="nav-link" :to="{name: 'Register'}">Register</router-link>
           </li>
         </ul>
       </div>
@@ -27,8 +30,40 @@
 </template>
 
 <script>
+import axios from 'axios'
+import API from '@/store/api'
 export default {
-  name: 'App'
+  name: 'App',
+  created () {
+    axios.get(API.products)
+      .then(response => {
+        let pageNum = this.$route.params.id - 1
+        if (pageNum >= 0 && pageNum <= Math.floor(response.data.length / this.$store.state.size)) {
+          this.$store.state.pageNumber = this.$route.params.id - 1
+        } else {
+          this.$router.push({name: 'Page404'})
+        }
+        this.$store.dispatch('setList', response)
+      })
+      .catch(e => {
+        console.log(e)
+      })
+
+    axios.get(API.categories)
+      .then(response => {
+        this.$store.dispatch('setCategoriesList', response)
+      })
+      .catch(e => {
+        console.log(e)
+      })
+  },
+  methods: {
+    logout: function () {
+      if (confirm('Are you sure?')) {
+        this.$store.dispatch('logout')
+      }
+    }
+  }
 }
 </script>
 
