@@ -43,6 +43,11 @@ export default new Router({
       component: ProductPage
     },
     {
+      path: '/:id(\\d+)',
+      name: 'EditForm',
+      component: AddForm
+    },
+    {
       path: '*',
       name: 'Page404',
       component: Page404

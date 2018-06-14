@@ -27,6 +27,8 @@ const Store = new Vuex.Store({
       state.addItem = data
     },
     updateCategories (state, data) {
+      let dt = data
+      state.categories = dt
       data.forEach(element => {
         state.arrayCategories.push(element.name)
       })
@@ -55,13 +57,90 @@ const Store = new Vuex.Store({
       })
     },
     save (context, params) {
-      context.state.addsList.forEach(item => {
-        if (item.id === params.item.id) {
-          item.name = params.item.name
+      if (params.item.id === undefined || params.item.id === 0) {
+        let formData = new FormData()
+        formData.append('image', params.item.image)
+        formData.append('name', params.item.name)
+        formData.append('description', params.item.description)
+        formData.append('price', params.item.price)
+        formData.append('published', params.item.published)
+        formData.append('user_id', context.state.user.id)
+        formData.append('category', params.item.category)
+        return axios.post(API.createProduct, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-Auth': context.state.user.token
+          }
+        })
+          .then(response => {
+            if (response.data === true) {
+              alert('Product added successfully!')
+              axios.get(API.products)
+                .then(response => {
+                  context.commit('updateAddsList', response.data)
+                })
+                .catch(e => {
+                  console.log(e)
+                })
+            }
+          })
+      } else {
+        context.state.addsList.forEach(item => {
+          if (item.id === params.item.id) {
+            item.name = params.item.name
+            item.description = params.item.description
+            item.price = params.item.price
+            item.published = params.item.published
+            item.category = params.item.category
+            let formData = new FormData()
+            formData.append('image', params.item.image)
+            formData.append('name', params.item.name)
+            formData.append('description', params.item.description)
+            formData.append('price', params.item.price)
+            formData.append('published', params.item.published)
+            formData.append('category', params.item.category)
+            return axios.post(API.editProduct + params.item.id, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                'X-Auth': context.state.user.token
+              }
+            })
+              .then(response => {
+                if (response.data === true || response.data === 1) {
+                  if (item.image !== params.item.image) {
+                    axios.get(API.products)
+                      .then(response => {
+                        console.log(context.state.addItem)
+                        context.commit('updateAddsList', response.data)
+                      })
+                      .catch(e => {
+                        console.log(e)
+                      })
+                  }
+                  alert('Product edited successfully!')
+                }
+              })
+          }
+        })
+        context.commit('updateAddsList', context.state.addsList)
+      }
+    },
+    delete (context, params) {
+      axios.get(API.deleteProduct + params.id, {
+        headers: {
+          'X-Auth': context.state.user.token
         }
       })
-
-      context.commit('updateAddsList', context.state.addsList)
+        .then(response => {
+          if (response.data === true || response.data === 1) {
+            context.state.addsList.forEach(item => {
+              if (item.id === params.id) {
+                context.state.addsList.splice(context.state.addsList.indexOf(item), 1)
+              }
+            })
+            alert('Product deleted successfully!')
+          }
+        })
     },
     login (context, params) {
       return axios.post(API.login, params, context.state.withCredentials)

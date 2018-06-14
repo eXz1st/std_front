@@ -22,7 +22,7 @@
               <br><br>
               <router-link class="btn btn-success btn-lg float-right text-center" :to="{name: 'ProductPage', params: {id: item.id}}">More</router-link>
               <br><br>
-              <router-link class="btn btn-success btn-lg float-right text-center" v-if="user.id === item.user_id" :to="{name: 'AddForm', params: {id: item.id}}">Edit</router-link>
+              <router-link class="btn btn-success btn-lg float-right text-center" v-if="user.id === item.user_id" :to="{name: 'EditForm', params: {id: item.id}}">Edit</router-link>
               <br><br>
               <button class="btn btn-success btn-lg float-right text-center" v-on:click="deleteItem" v-if="user.id === item.user_id || user.role === 'admin'">Delete</button>
               <br><br>
