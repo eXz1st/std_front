@@ -1,17 +1,29 @@
 <template>
   <div class="hello">
-    <h1>Login page</h1>
-    <div>{{ login }}</div>
-    <div>
-        <div>
-            <input type="text" name="login" v-model="login">
+    <div class="row pt-5">
+      <div class="col-md-4 mx-auto">
+        <div class="card rounded-0">
+            <div class="card-header">
+                <h3 class="mb-0">Login</h3>
+            </div>
+            <div class="card-body">
+                <div class="form" role="form">
+                    <div style="color: red">
+                      Something went wrong
+                    </div>
+                    <div class="form-group">
+                        <label for="login">Username</label>
+                        <input type="text" class="form-control form-control-lg rounded-0" placeholder="Login" name="login" v-model="login" required="">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control form-control-lg rounded-0" placeholder="Password" name="password" v-model="password" required="">
+                    </div>
+                    <button class="btn btn-success btn-lg float-right" @click="loginAction">Login</button>
+                </div>
+            </div>
         </div>
-        <div>
-            <input type="password" name="pass" v-model="pass">
-        </div>
-        <div>
-            <button @click="loginAction">Login</button>
-        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -22,17 +34,14 @@ export default {
   data () {
     return {
       login: 'test',
-      pass: 'test'
+      password: 'test'
     }
   },
   methods: {
     loginAction: function () {
       console.log('Login: ' + this.login)
-      console.log('Pass: ' + this.pass)
+      console.log('Password: ' + this.password)
     }
-  },
-  beforeCreate: function () {
-    console.log('beforeCreate')
   }
 }
 </script>
